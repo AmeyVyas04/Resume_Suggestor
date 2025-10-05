@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Resume Screening Tool</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
@@ -18,6 +19,7 @@
             color: #e0e6ed;
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
         }
         
         /* Animated Background */
@@ -77,7 +79,7 @@
         }
         
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 40px auto;
             background: rgba(30, 34, 44, 0.95);
             backdrop-filter: blur(20px);
@@ -140,6 +142,43 @@
             font-size: 1.2rem;
             font-weight: 400;
             letter-spacing: 1px;
+        }
+        
+        .info-section {
+            background: rgba(35, 40, 58, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #7fd1b9;
+        }
+        
+        .info-section h2 {
+            color: #7fd1b9;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+        }
+        
+        .info-section p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .info-section ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .info-section li:before {
+            content: "▸";
+            color: #7fd1b9;
+            position: absolute;
+            left: -15px;
         }
         
         .form-group {
@@ -208,6 +247,108 @@
             transform: translateY(-1px);
         }
         
+        .results-section {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .results-header {
+            text-align: center;
+            color: #7fd1b9;
+            margin-bottom: 25px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+        }
+        
+        .resume-card {
+            background: rgba(35, 40, 58, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #7fd1b9;
+            transition: all 0.3s ease;
+        }
+        
+        .resume-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .resume-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .resume-name {
+            font-size: 1.4rem;
+            color: #7fd1b9;
+            font-weight: 600;
+        }
+        
+        .resume-score {
+            background: linear-gradient(135deg, #7fd1b9 0%, #3aafa9 100%);
+            color: #0c0c0c;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .resume-details {
+            margin-bottom: 15px;
+        }
+        
+        .resume-details p {
+            margin-bottom: 8px;
+        }
+        
+        .suggestions {
+            background: rgba(30, 34, 44, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .suggestions h3 {
+            color: #7fd1b9;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .suggestions ul {
+            padding-left: 20px;
+        }
+        
+        .suggestions li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .suggestions li:before {
+            content: "★";
+            color: #7fd1b9;
+            position: absolute;
+            left: -15px;
+        }
+        
+        .error-message {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: #f8d7da;
+        }
+        
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -252,6 +393,15 @@
             .ai-icon {
                 font-size: 3rem;
             }
+            
+            .resume-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .resume-score {
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
@@ -271,10 +421,22 @@
     
     <div class="container">
         <span class="ai-icon">🤖📄</span>
-        <h1>AI RESUME SCANNER</h1>
+        <h1>AI RESUME ANALYZER</h1>
         <div class="subtitle">Advanced Neural Network-Powered Resume Analysis & Ranking System</div>
         
-        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="info-section">
+            <h2>How It Works</h2>
+            <p>Our AI-powered system analyzes resumes against job requirements to help recruiters identify the best candidates quickly and efficiently.</p>
+            <ul>
+                <li><strong>Upload Job Description:</strong> Provide the detailed job requirements, skills, and qualifications</li>
+                <li><strong>Upload Resumes:</strong> Add multiple resumes in PDF or DOCX format</li>
+                <li><strong>AI Analysis:</strong> Our system evaluates each resume against the job requirements</li>
+                <li><strong>Get Results:</strong> View ranked candidates with detailed analysis and improvement suggestions</li>
+            </ul>
+            <p>The system provides specific suggestions for each candidate to help them improve their resumes and better match the job requirements.</p>
+        </div>
+        
+        <form id="uploadForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="job_description">Job Description:</label>
                 <textarea name="job_description" id="job_description" rows="8" required 
@@ -295,6 +457,15 @@
             <div class="spinner"></div>
             <p>Processing resumes with AI...</p>
         </div>
+        
+        <div id="errorContainer"></div>
+        
+        <div class="results-section" id="resultsSection">
+            <h2 class="results-header">Analysis Results</h2>
+            <div id="resultsContainer">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </div>
     </div>
     
     <div class="footer">
@@ -302,11 +473,97 @@
     </div>
     
     <script>
-        // Form submission with loading animation
-        document.getElementById('uploadForm').addEventListener('submit', function() {
-            document.getElementById('loading').style.display = 'block';
-            document.querySelector('.submit-btn').style.display = 'none';
+        // Form submission with AJAX
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const loading = document.getElementById('loading');
+            const errorContainer = document.getElementById('errorContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            // Reset UI
+            errorContainer.innerHTML = '';
+            resultsSection.style.display = 'none';
+            loading.style.display = 'block';
+            submitBtn.style.display = 'none';
+            
+            // Create FormData object
+            const formData = new FormData(this);
+            
+            // Send AJAX request
+            fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                submitBtn.style.display = 'block';
+                
+                if (data.error) {
+                    showError(data.error);
+                } else if (data.results && data.results.length > 0) {
+                    displayResults(data.results);
+                } else {
+                    showError('No valid resumes found or no text could be extracted.');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                submitBtn.style.display = 'block';
+                showError('An error occurred while processing your request.');
+                console.error('Error:', error);
+            });
         });
+        
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+        
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            resultsContainer.innerHTML = '';
+            
+            results.forEach(result => {
+                const resumeCard = document.createElement('div');
+                resumeCard.className = 'resume-card';
+                
+                // Determine color based on score
+                let scoreColor = '#7fd1b9'; // Default green
+                if (result.score < 50) scoreColor = '#ff6b6b'; // Red for low scores
+                else if (result.score < 70) scoreColor = '#ffd93d'; // Yellow for medium scores
+                
+                resumeCard.innerHTML = `
+                    <div class="resume-header">
+                        <div class="resume-name">${result.name}</div>
+                        <div class="resume-score" style="background: linear-gradient(135deg, ${scoreColor} 0%, ${scoreColor}99 100%)">
+                            ${result.score}% Match
+                        </div>
+                    </div>
+                    <div class="resume-details">
+                        <p><strong>Match Details:</strong> ${result.matchDetails}</p>
+                        <p><strong>Strengths:</strong> ${result.strengths.length > 0 ? result.strengths.join(', ') : 'Key skills matched with job requirements'}</p>
+                    </div>
+                    <div class="suggestions">
+                        <h3>Improvement Suggestions</h3>
+                        <ul>
+                            ${result.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(resumeCard);
+            });
+            
+            resultsSection.style.display = 'block';
+            
+            // Smooth scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
         
         // Add typing effect to subtitle
         const subtitle = document.querySelector('.subtitle');
