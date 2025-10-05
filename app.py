@@ -1,13 +1,25 @@
 import streamlit as st
 import os
-import PyPDF2
+import pypdf  # Changed from PyPDF2
 import docx
 import spacy
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 import re
 import numpy as np
 from io import BytesIO
+import warnings
+
+# Suppress all warnings
+warnings.filterwarnings("ignore")
+
+# Import sklearn with error handling
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+    SKLEARN_AVAILABLE = True
+except ImportError as e:
+    st.error(f"scikit-learn import error: {e}")
+    st.info("Try installing: pip install scikit-learn==1.3.2")
+    SKLEARN_AVAILABLE = False
 
 # Page configuration
 st.set_page_config(
@@ -20,18 +32,20 @@ st.set_page_config(
 @st.cache_resource
 def load_spacy_model():
     try:
-        nlp = spacy.load('en_core_web_sm')
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            nlp = spacy.load('en_core_web_sm')
         return nlp
     except OSError:
-        st.error("spaCy model not found. Please install it using: python -m spacy download en_core_web_sm")
+        st.error("spaCy model not found. Please install it using: `python -m spacy download en_core_web_sm`")
         return None
 
 nlp = load_spacy_model()
 
 def extract_text_from_pdf(file):
-    """Extract text from PDF file"""
+    """Extract text from PDF file using pypdf"""
     try:
-        pdf_reader = PyPDF2.PdfReader(file)
+        pdf_reader = pypdf.PdfReader(file)
         text = ""
         for page in pdf_reader.pages:
             text += page.extract_text() + "\n"
@@ -74,6 +88,9 @@ def extract_skills(text):
 
 def calculate_match_score(job_description, resume_text):
     """Calculate match score between job description and resume"""
+    if not SKLEARN_AVAILABLE:
+        return 0, [], []
+    
     job_desc_clean = preprocess_text(job_description)
     resume_clean = preprocess_text(resume_text)
     
@@ -141,6 +158,11 @@ def get_match_description(score):
 def main():
     st.title("📄 AI Resume Screening Tool")
     st.markdown("Upload job description and resumes to analyze candidate matches")
+    
+    if not SKLEARN_AVAILABLE:
+        st.error("⚠️ scikit-learn is not available. Please install compatible versions.")
+        st.code("pip install scikit-learn==1.3.2 numpy==1.24.3 scipy==1.10.1")
+        return
     
     # Job description input
     st.header("Job Description")
