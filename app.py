@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-import PyPDF2  # Use PyPDF2 instead of pypdf
+import pdfplumber  # More reliable PDF text extraction
 import docx
 import spacy
 import re
@@ -8,7 +8,7 @@ import numpy as np
 from io import BytesIO
 import warnings
 
-# Rest of your code remains the same...
+# Suppress all warnings
 warnings.filterwarnings("ignore")
 
 # Import sklearn with error handling
@@ -43,18 +43,19 @@ def load_spacy_model():
 nlp = load_spacy_model()
 
 def extract_text_from_pdf(file):
-    """Extract text from PDF file using PyPDF2"""
+    """Extract text from PDF file using pdfplumber"""
     try:
-        pdf_reader = PyPDF2.PdfReader(file)
         text = ""
-        for page in pdf_reader.pages:
-            text += page.extract_text() + "\n"
+        with pdfplumber.open(file) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text + "\n"
         return text
     except Exception as e:
         st.error(f"Error reading PDF: {e}")
         return ""
 
-# Rest of your functions remain exactly the same...
 def extract_text_from_docx(file):
     """Extract text from DOCX file"""
     try:
